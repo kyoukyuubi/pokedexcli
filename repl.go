@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
 	"github.com/kyoukyuubi/pokedexcli/internal/pokeapi"
+	"github.com/kyoukyuubi/pokedexcli/internal/pokecache"
 )
 
 type Config struct {
 	pokeapiClient pokeapi.Client
     nextLocationsURL *string
     prevLocationsURL *string
+	pokecacheCache *pokecache.Cache
 }
 
 func startRepl(config *Config) {
