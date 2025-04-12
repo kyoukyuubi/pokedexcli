@@ -2,24 +2,21 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
-func commandExplore(config *Config, param string) error {
-	if param == "" {
+func commandExplore(config *Config, args ...string) error {
+	if len(args) != 1 {
 		return fmt.Errorf("please specify a location to explore, e.g., 'explore pastoria-city-area'")
 	}
-	locationsResp, err := config.pokeapiClient.Location(param)
+	name := args[0]
+	location, err := config.pokeapiClient.Location(name)
 	if err != nil {
-		if strings.Contains(err.Error(), "404") {
-			return fmt.Errorf("location '%s' not found; please check the name and try again", param)
-		}
-		return fmt.Errorf("unexpected error fetching location: %v", err)
+		return err
 	}
-
-	fmt.Printf("Exploring %s...\nFound Pokémon:\n", locationsResp.Name)
-	for _, pokemon := range locationsResp.PokemonEncounters {
-		fmt.Printf("- %s\n", pokemon.Pokemon.Name)
+	fmt.Printf("Exploring %s...\n", location.Name)
+	fmt.Println("Found Pokemon: ")
+	for _, enc := range location.PokemonEncounters {
+		fmt.Printf(" - %s\n", enc.Pokemon.Name)
 	}
 	return nil
 }
